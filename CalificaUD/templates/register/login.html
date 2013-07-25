@@ -1,0 +1,90 @@
+{% extends 'base_general.html'%}
+
+{%block titulo%}Inicio{%endblock titulo%}
+
+{%block styles%}
+	<link href="{{STATIC_URL}}css/styles.css" rel="stylesheet">
+{%endblock styles%}
+
+{% block login%}<li><a href="{% url 'home'%}">Home</a></li>{%endblock login%}
+
+{% block cuerpo %}
+	
+	<div class="container-fluid" id="log">			
+			<form class="form-signin" action="{%url 'login'%}" id='form_login' method="post">{%csrf_token%}
+				<h2 class="form-signin-heading text-center">LOGIN</h2>	
+				{% comment %}
+				Creacion del formulario <p></p>
+				{% endcomment %}		
+				{% for field in formulario %}
+		            {{ field.label_tag }} {{ field }}
+			    {% endfor %}
+				<label class="checkbox">
+					<input type="checkbox" value="remember-me"> Recuerdame
+				</label>
+				<div class="row-fluid">
+					<div class="span12">
+						<button class="btn btn-large btn-primary span6" type="submit" id="iniciarSesion_login">Iniciar sesion</button>
+						<button class="btn btn-large btn-info span6" type="button"  id="registrar">Registrarme</button>
+					</div>
+				</div>
+			</form>
+			{% comment %}
+			Manipilacion  de errores <div class="alert alert-error">Error</div>
+			{% endcomment %}
+			{% if  formulario.errors%}
+				<div> <h5>Hay los siguiente errores: </h5></div>	
+				{% for errors in formulario.errors.items %}
+					<div class="alert alert-error">
+					{% for error in errors %}
+		        		{{error|title}}
+		        	{% endfor %}
+		        	</div>
+		    	{% endfor %}		    	
+			{% endif %}
+			{% if errorValidation %}
+				<div class="alert alert-error">{{errorValidation}}</div>
+			{% endif %}
+	</div> <!-- /container -->
+		
+
+
+
+	<div class="container-fluid " id="register">
+			<form class="form-signin" id="form-register" action="{%url 'registro'%}" method="post">{%csrf_token%}				
+
+				<h2 class="form-signin-heading text-center">Registro</h2>
+				<div class="input-prepend">
+					{% for field in formularioRegistro %}
+			            {{ field.label_tag }} {{ field }}
+				    {% endfor %}		
+				</div>		
+
+				{% if  formularioRegistro.errors%}
+				<div> <h5>Hay los siguiente errores: </h5></div>					
+				{% for errors in formularioRegistro.errors.items %}
+					<div class="alert alert-error">
+					{% for error in errors %}
+		        		{{error|title}}
+		        	{% endfor %}
+		        	</div>
+			    	{% endfor %}		    	
+				{% endif %}
+
+				<div class="row-fluid">
+					<div class="span12">
+						<button class="btn btn-large btn-info span6" type="button" id="volverToIniciarSesion">Volver</button>
+						<button class="btn btn-large btn-info span6" type="submit" id="botonRegistrarse">Registrarse</button>							
+					</div>
+				</div>
+			</form>
+		</div>
+		
+{% endblock cuerpo %}
+
+{%block scripts%}
+	<script src="{{STATIC_URL}}js/aplicacion.js"></script>
+	{% if registro %}
+	<script>$("#log").hide();$("#register").show();</script>
+	{% endif %}
+{%endblock scripts%}

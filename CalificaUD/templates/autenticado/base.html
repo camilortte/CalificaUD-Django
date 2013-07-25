@@ -1,0 +1,39 @@
+{% extends 'base_general.html'%}
+
+{%block titulo%}Estudiante CalificaUD{%endblock titulo%}
+
+{%block styles%}
+	<link href="{{STATIC_URL}}css/styles.css" rel="stylesheet">
+{%endblock styles%}
+
+{% block cabecera %}
+	{% include "autenticado/header.html" %}
+{% endblock cabecera %}
+
+{% block cuerpo %}
+	<div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li><a  class="btn {% block home_active %}{% endblock  %}" href="{% url 'index_private'%}"><i class="icon-home"></i>Home</a></li>
+			  <li class="nav-header"><i class="icon-book  {% block informate_active %}{% endblock  %}"></i> Informate</li>
+              <li><a  class="btn " href="todos_los_profesores.html  {% block todos_profesores_active %}{% endblock  %}">Todos los profesores</a></li>
+              <li class="nav-header"><i class="icon-globe  {% block cuantifica_active %}{% endblock  %}"></i> Cuantifica</li>
+              <li ><a class="btn space_link" href="#">Estadisticas por Facultad <span class="label  {% block estadisticas_facultad_active %}{% endblock  %}">¡Muy Pronto!</span></a></li>
+              <li><a class="btn space_link  {% block estadisticas_carrera_active %}{% endblock  %}" href="estadisticas_carrera.html">Estadisticas por carrera <span class="label label-important">¡Nuevo!</span></a></li>
+              <li><a class="btn space_link  {% block estadisticas_materia_active %}{% endblock  %}" href="estadisticas_materia.html">Estadisticas por Materia <span class="label label-important">¡Nuevo!</span></a></li>
+              <li class="nav-header  {% block calificar_active %}{% endblock  %}"><i class="icon-ok-sign"></i> Califica</li>
+              <li><a class="btn  space_link  {% block calificar_carrera_active %}{% endblock  %}" href="califica_carrera.html">Por carrera <span class="label label-important">¡Nuevo!</span></a></li>
+              <li><a class="btn space_link  {% block calificar_materia_active %}{% endblock  %}" href="califica_materia.html">Por materia <span class="label label-important">¡Nuevo!</span></a></li>
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+        	{% block contenido %}{% endblock contenido %}         
+        </div><!--/span-->
+      </div><!--/row-->
+  </div>
+       
+		
+{% endblock cuerpo %}

@@ -8,7 +8,7 @@ $("#registrar").click(function() {
 });
 
 $("#volverToIniciarSesion").click(function() {	
-	 $("#register").hide("slow");
+	$("#register").hide("slow");
 	$("#log").show("slow");
 });
 
