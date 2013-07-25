@@ -75,6 +75,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(RUTA_PROYECTO,'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -83,6 +84,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'compressor.finders.CompressorFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -103,9 +105,14 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'htmlmin.middleware.HtmlMinifyMiddleware',     
 )
+
+
+HTML_MINIFY = True
 
 
 ROOT_URLCONF = 'CalificaUD.urls'
@@ -126,14 +133,24 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django_extensions',    
     'django.contrib.messages',
     'django.contrib.staticfiles',    
     'django.contrib.admin',    
     'django.contrib.admindocs',
-    #'south',
-    'django_extensions',
+    #'registration',
+    #'south',        
+    #'compressor',  
     'Principal',
 )
+
+ACCOUNT_ACTIVATION_DAYS = 1 
+LOGIN_REDIRECT_URL = '/'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'camilolinchis@gmail.com'
+EMAIL_HOST_PASSWORD = 'M3n78pro'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

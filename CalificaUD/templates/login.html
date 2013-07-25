@@ -1,0 +1,112 @@
+{% extends 'base_general.html'%}
+
+{%block titulo%}Inicio{%endblock titulo%}
+
+{%block styles%}
+	<link href="{{STATIC_URL}}css/styles.css" rel="stylesheet">
+{%endblock styles%}
+
+{% block login%}<li><a href="{% url 'home'%}">Home</a></li>{%endblock login%}
+
+{% block cuerpo %}
+	
+	<div class="container-fluid" id="log">			
+			<form class="form-signin" action="" id='form_login' method="post">{%csrf_token%}
+				<h2 class="form-signin-heading text-center">LOGIN</h2>	
+				{% comment %}
+				Creacion del formulario <p></p>
+				{% endcomment %}		
+				{% for field in formulario %}
+		            {{ field.label_tag }} {{ field }}
+			    {% endfor %}
+				<label class="checkbox">
+					<input type="checkbox" value="remember-me"> Recuerdame
+				</label>
+				<div class="row-fluid">
+					<div class="span12">
+						<button class="btn btn-large btn-primary span6" type="submit" id="iniciarSesion_login">Iniciar sesion</button>
+						<button class="btn btn-large btn-info span6" type="button"  id="registrar">Registrarme</button>
+					</div>
+				</div>
+			</form>
+			{% comment %}
+			Manipilacion  de errores <div class="alert alert-error">Error</div>
+			{% endcomment %}
+			{% if  formulario.errors%}
+				<div> <h5>Hay los siguiente errores: </h5></div>	
+				{% for errors in formulario.errors.items %}
+					<div class="alert alert-error">
+					{% for error in errors %}
+		        		{{error}}
+		        	{% endfor %}
+		        	</div>
+		    	{% endfor %}		    	
+			{% endif %}
+			{% if errorValidation %}
+				<div class="alert alert-error">{{errorValidation}}</div>
+			{% endif %}
+	</div> <!-- /container -->
+		
+
+
+
+	<div class="container-fluid " id="register">
+			<form class="form-signin" id="form-register" action="#">
+				<h2 class="form-signin-heading text-center">Registro</h2>
+				<div class="input-prepend">
+					<span class="add-on ">Apellido&nbsp;&nbsp;&nbsp;</span>
+					<input type="text" class="input-xlarge" placeholder="Apellido" required=true><br><br>
+					<span class="add-on ">Nombre&nbsp;&nbsp;&nbsp;</span>
+					<input type="text" class="input-xlarge" placeholder="Nombre" required=true><br><br>
+					<span class="add-on ">@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<input type="email" class="input-xlarge" placeholder="Direccion de correo" required=true id="correo"><br><br>
+					<span class="add-on ">@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<input type="email" class="input-xlarge" placeholder="Repita direccion de correo" required=true id="correo2"><br><br>
+					<span class="add-on ">FechaNac</span>
+					<input type="date" class="input-xlarge" placeholder="Ingrese fecha Nacimiento" required=true><br><br>
+					<span class="add-on ">Facultad&nbsp;&nbsp;</span>
+					<select class="input-xlarge" required=true>
+						<option>A</option>
+						<option>C</option>
+						<option>A</option>
+						<option>E</option>
+						<option>S</option>
+					</select><br><br>
+					<span class="add-on ">Carrera&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<select class="input-xlarge" required=true>
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+					</select><br><br>
+					<span class="add-on ">Localidad&nbsp;</span>
+					<select class="input-xlarge" required=true>
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+					</select><br><br>
+					<span class="add-on ">Pass&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<input type="password" class="input-xlarge" placeholder="Password" required=true id='password1'><br><br>
+					<span class="add-on ">Pass&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<input type="password" class="input-xlarge" placeholder="Repita Password" required=true id='password2'><br><br>
+				</div>
+
+				<div class="alert alert-error" id="error_registro">Error de registro</div>
+
+				<div class="row-fluid">
+					<div class="span12">
+						<button class="btn btn-large btn-info span6" type="submit" id="volverToIniciarSesion">Volver</button>
+						<button class="btn btn-large btn-info span6" type="submit" id="botonRegistrarse">Registrarse</button>							
+					</div>
+				</div>
+			</form>
+		</div>
+		
+{% endblock cuerpo %}
+
+{%block scripts%}
+	<script src="{{STATIC_URL}}js/aplicacion.js"></script>
+{%endblock scripts%}

@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator , MinValueValidator
 import datetime 
 #from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager 
 from django.contrib.auth.models import User
+
 """class UsuariosManager(BaseUserManager):
     def create_user(self, username, nombre, apellido, password=None):
         if not username:
@@ -148,8 +149,12 @@ class Estudiante(models.Model):
     carrera = models.ForeignKey(Carrera)
     localidad = models.ForeignKey(Localidad)
 
+    class Meta:
+        verbose_name = u'Estudiante'
+        verbose_name_plural = u'Estudiantes'
+
     def __unicode__(self):  
-        return self.nombre
+        return self.nombre+" "+self.codigo
 
 
 class Calificacion(models.Model):

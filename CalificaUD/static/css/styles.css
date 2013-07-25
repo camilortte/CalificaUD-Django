@@ -1,0 +1,58 @@
+#foote{
+	background-color: #eeeeee;	
+	border-radius: 1em;	
+	padding-top: 60px;
+}
+
+.login{
+	border:   0.2em   dashed blue;
+	width: 50%;
+	margin: auto;
+	text-align: center;
+}
+
+.input-regis{
+	display: block;
+	background: blue;
+}
+
+.bordeado{
+	border:   0.2em   dashed blue;
+	display:inline-block;
+}
+
+.form-signin {
+        max-width: 28em;
+        padding: 1.5em 1.5em 1.5em;
+        margin: 0 auto 2em;
+        background-color: #fff;
+        border: 0.1em solid #e5e5e5;
+        -webkit-border-radius: 0.5em;
+           -moz-border-radius: 0.5em;
+                border-radius: :;
+        -webkit-box-shadow: 0 0.5em 0.5em rgba(0,0,0,.05);
+           -moz-box-shadow: 0 0.5em 0.5em rgba(0,0,0,.05);
+                box-shadow: 0 0.5em 0.5em rgba(0,0,0,.05);
+      }
+.form-signin .form-signin-heading,.form-signin .checkbox {
+	margin-bottom: 10px;
+}
+
+
+.space{
+	height: 10em;
+}
+
+.space_form{
+	display: block;
+}
+
+#register,#error_registro{
+	display: none;
+}
+
+.space_link{
+	margin-bottom: 0.5em;
+}
+
+	
