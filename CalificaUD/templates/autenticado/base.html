@@ -17,8 +17,8 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li><a  class="btn {% block home_active %}{% endblock  %}" href="{% url 'index_private'%}"><i class="icon-home"></i>Home</a></li>
-			  <li class="nav-header"><i class="icon-book  {% block informate_active %}{% endblock  %}"></i> Informate</li>
-              <li><a  class="btn " href="todos_los_profesores.html  {% block todos_profesores_active %}{% endblock  %}">Todos los profesores</a></li>
+			  <li class="nav-header"><i class="icon-book"></i> Informate</li>
+              <li><a  class="btn {% block todos_profesores_active %}{% endblock  %}" href="{%url 'todos_profesores'%}"  >Todos los profesores</a></li>
               <li class="nav-header"><i class="icon-globe  {% block cuantifica_active %}{% endblock  %}"></i> Cuantifica</li>
               <li ><a class="btn space_link" href="#">Estadisticas por Facultad <span class="label  {% block estadisticas_facultad_active %}{% endblock  %}">¡Muy Pronto!</span></a></li>
               <li><a class="btn space_link  {% block estadisticas_carrera_active %}{% endblock  %}" href="estadisticas_carrera.html">Estadisticas por carrera <span class="label label-important">¡Nuevo!</span></a></li>

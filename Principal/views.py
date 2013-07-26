@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect ,render_to_response
 from Principal.forms import LoginForm,RegisterFormForm
 from django.template import RequestContext
 from django.views.decorators.cache import cache_control
-
+from Principal.models import Docente , Materia
 
 
 
@@ -49,9 +49,9 @@ def registration(request):
         formulario = LoginForm() 
         formularioRegistro = RegisterFormForm(request.POST) 
         if formularioRegistro.is_valid():     
-            userName = request.cleaned_data['username', None]
-            userPass = request.cleaned_data['password', None]
-            userMail = request.cleaned_data['email', None]
+            #userName = request.cleaned_data['username', None]
+            #userPass = request.cleaned_data['password', None]
+            #userMail = request.cleaned_data['email', None]
             #return render(request, 'login.html')
             return redirect('index_general')
     else:
@@ -59,8 +59,16 @@ def registration(request):
         formularioRegistro = RegisterFormForm() # An unbound form
     return render(request, 'register/login.html', {'formularioRegistro': formularioRegistro,'formulario': formulario,'registro':True})
 
+@login_required(login_url='index_general')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def todos_los_profesores(request):
+    docentes = Docente.objects.all()
+    materias_docente=[]
+    for docente in docentes:        
+        materias_docente.append(Materia.objects.filter(profesor=docente))
+    materias_docente=Materia.objects.filter(profesor__id=2)
+    return render(request,'autenticado/todos_profesores.html',{'materias_docente':materias_docente})
+   
 
-  
-       
    
 

@@ -1,0 +1,47 @@
+{% extends 'autenticado/base.html'%}
+
+{%block titulo%}Estudiante CalificaUD{%endblock titulo%}
+
+{%block styles%}
+<link href="{{STATIC_URL}}css/styles.css" rel="stylesheet">
+{%endblock styles%}
+
+{% block todos_profesores_active %}active{% endblock  %}
+
+
+{% block contenido %}
+
+  {% if materias_docente %}      
+  {{materias_docente}}
+      <h1>Profesores</h1>
+      <table class="table table-bordered">
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Materia</th>
+        </tr>
+        {% for materias in materias_docente%}             
+          <tr>
+            {{materias}}
+          </tr> 
+        {%endfor%}
+      </table>
+    {% else %}
+      <h1>No hay registros</h1>
+    {%endif%}
+
+{% endblock contenido %}
+
+{% comment %}
+  {% for materia in materias_docente%}   
+          {{materia}}
+          {% for ma in  materia%}            
+            {% for docente in ma.profesor.all %}
+                <td>{{ docente.nombre }}</td> 
+                <td>{{ docente.apellido }}</td>                     
+              <td>{{ ma.nombre }}</td> 
+            {% endfor %}
+        {% endfor %}          
+        
+        {%endfor%}
+{% endcomment %}
