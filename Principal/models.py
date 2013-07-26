@@ -2,8 +2,10 @@
 from django.db import models
 from django.core.validators import MaxValueValidator , MinValueValidator
 import datetime 
-#from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser,  BaseUserManager ,PermissionsMixin
+#from django.contrib.auth.models import User
+
+
 
 """class UsuariosManager(BaseUserManager):
     def create_user(self, username, nombre, apellido, password=None):
@@ -139,13 +141,54 @@ class Criterio(models.Model):
         return self.descripcion
 
 
+class MyUserManager(BaseUserManager):
+    def create_user(self, nombre,apellido ,email, codigo, password=None):
+        """
+        Creates and saves a User with the given email, date of
+        birth and password.
+        """
+        if not email:
+            raise ValueError('Debe ingresar un Correo')
+        if not nombre:
+            raise ValueError('Debe ingresar un Nombre')
+        if not apellido:
+            raise ValueError('Debe ingresar un Apellido')
+        if not codigo:
+            raise ValueError('Debe ingresar un codigo')
 
-class Estudiante(models.Model):
-    user  = models.OneToOneField(User)
+        user = self.model(
+            email=MyUserManager.normalize_email(email),
+            nombre=nombre,
+            apellido=apellido,
+            codigo=codigo,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, nombre,apellido ,email, codigo,password):
+        """
+        Creates and saves a superuser with the given email, date of
+        birth and password.
+        """
+        user = self.model(
+            email=MyUserManager.normalize_email(email),
+            nombre=nombre,
+            apellido=apellido,
+            codigo=codigo,
+        )
+        user.is_admin = True
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+"""class Estudiante(models.Model):
+    #user  = models.OneToOneField(User)
     nombre = models.CharField(max_length=250)
     apellido = models.CharField(max_length=250)
     email = models.EmailField(unique=True) 
-    codigo = models.CharField(max_length=11)    
+    codigo = models.CharField(max_length=11,null=False,blank=False)    
     carrera = models.ForeignKey(Carrera)
     localidad = models.ForeignKey(Localidad)
 
@@ -154,7 +197,59 @@ class Estudiante(models.Model):
         verbose_name_plural = u'Estudiantes'
 
     def __unicode__(self):  
-        return self.nombre+" "+self.codigo
+        return self.nombre+" "+self.codigo"""
+
+class Estudiante(AbstractBaseUser,PermissionsMixin):
+    nombre = models.CharField(max_length=250,null=False,blank=False)
+    apellido = models.CharField(max_length=250,null=False,blank=False)
+    email = models.EmailField(
+        verbose_name='Direccion de correo Electronico',
+        max_length=255,
+        unique=True,
+        db_index=True,
+    )
+    codigo = models.CharField(max_length=11,null=False,blank=False)    
+    carrera = models.ForeignKey(Carrera,null=True,blank=True)
+    localidad = models.ForeignKey(Localidad,null=True,blank=True)    
+    
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    
+
+
+    objects = MyUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nombre','apellido','codigo']
+
+    def get_full_name(self):
+        # The user is identified by their email address
+        return self.nombre+" "+self.apellido
+
+    def get_short_name(self):
+        # The user is identified by their email address
+        return self.email
+
+    def __unicode__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        return self.is_admin
+   
+
+
 
 
 class Calificacion(models.Model):
@@ -183,14 +278,4 @@ class Comentario(models.Model):
 
     def __unicode__(self):
         return self.contenido
-
-
-
-
-    
-    
-
-    
-
-   
 

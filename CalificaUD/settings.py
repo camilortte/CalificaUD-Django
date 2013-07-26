@@ -97,7 +97,7 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
-#AUTH_USER_MODEL = 'Principal.Estudiante'
+AUTH_USER_MODEL = 'Principal.Estudiante'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',

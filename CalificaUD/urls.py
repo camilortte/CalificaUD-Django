@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'Principal.views.logout',name='logout'),	 
     url(r'^registro/$', 'Principal.views.registration',name='registro'),   
     url(r'^profesores/$', 'Principal.views.todos_los_profesores',name='todos_profesores'),   
+    url(r'^registro2/$', 'Principal.views.registration2',name='registro2'),   
 )

@@ -7,6 +7,8 @@ from Principal.forms import LoginForm,RegisterFormForm
 from django.template import RequestContext
 from django.views.decorators.cache import cache_control
 from Principal.models import Docente , Materia
+#from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from Principal.admin import UserCreationForm
 
 
 
@@ -69,6 +71,23 @@ def todos_los_profesores(request):
     materias_docente=Materia.objects.filter(profesor__id=2)
     return render(request,'autenticado/todos_profesores.html',{'materias_docente':materias_docente})
    
+
+def registration2(request):
+    auth.logout(request)
+    if request.method == 'POST': 
+        formulario = LoginForm() 
+        formularioRegistro =UserCreationForm(request.POST) 
+        if formularioRegistro.is_valid():     
+            formularioRegistro.save()
+            #userName = request.cleaned_data['username', None]
+            #userPass = request.cleaned_data['password', None]
+            #userMail = request.cleaned_data['email', None]
+            #return render(request, 'login.html')
+            return redirect('index_general')
+    else:
+        formulario = LoginForm() 
+        formularioRegistro = UserCreationForm(request.POST)  # An unbound form
+    return render(request, 'register/login-register.html', {'formularioRegistro': formularioRegistro,'formulario': formulario,'registro':True})
 
    
 
