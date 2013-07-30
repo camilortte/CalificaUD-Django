@@ -1,5 +1,5 @@
 #encoding:utf-8
-# Django settings for CalificaUD project.
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -129,6 +129,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -142,6 +143,11 @@ INSTALLED_APPS = (
     #'south',        
     #'compressor',  
     'Principal',
+)
+
+#APP SUIT
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
 )
 
 ACCOUNT_ACTIVATION_DAYS = 1 
@@ -180,3 +186,6 @@ LOGGING = {
         },
     }
 }
+
+#Tiempo en que expira la sesion en segundos
+SESSION_COOKIE_AGE = 3600

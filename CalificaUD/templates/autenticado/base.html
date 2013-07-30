@@ -7,7 +7,35 @@
 {%endblock styles%}
 
 {% block cabecera %}
-	{% include "autenticado/header.html" %}
+	<!--Barra de navegacion-->
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="{% url 'index_private'%}">Estudiante - CalificaUD</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <!--<li class="active"><a href="#">Home</a></li>-->           
+            <li><a href="#contact">¿Tienes sugerencias?</a></li>
+            <li><a href="#about">Acerca de</a></li>
+          </ul>
+                  <div class="btn-group navbar-text pull-right">
+              <a class="btn" href=""><i class="icon-user"></i> {{user.nombre|title|truncatechars:15}} {{user.apellido|title|truncatechars:15}}</a>
+              <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'actualizar'%}"><i class="icon-pencil"></i> Actualizar Datos</a></li>                
+                <li class="divider"></li>
+                <li><a href="{% url 'logout'%}"><i class="icon-off"></i> Cerrar sesi&oacute;n</a></li>
+              </ul>
+            </div>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>  
 {% endblock cabecera %}
 
 {% block cuerpo %}

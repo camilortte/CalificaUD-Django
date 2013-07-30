@@ -4,7 +4,6 @@ from django.contrib.auth.admin import UserAdmin
 #from django.contrib.auth.models import User
 
 #################################
-from django.contrib.auth.models import Group
 from Principal.forms import UserChangeForm , UserCreationForm
 
 class MyUserAdmin(UserAdmin):
@@ -12,14 +11,14 @@ class MyUserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('email','nombre','apellido','codigo','is_active', 'is_admin','last_login',)
-    list_filter = ('is_admin','last_login')
+    list_display = ('email','nombre','apellido','codigo','is_active', 'is_staff','is_superuser','last_login',)
+    list_filter = ('is_staff','last_login')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('nombre','apellido','codigo','localidad','carrera',)}),
-        ('Permissions', {'fields': ('is_admin','is_active','is_superuser','groups',
+        ('Permissions', {'fields': ('is_staff','is_active','is_superuser','groups',
                                 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login',)}),
+        ('Important dates', {'fields': ('date_joined','last_login',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -35,7 +34,7 @@ class MyUserAdmin(UserAdmin):
 
 
 admin.site.register(Estudiante, MyUserAdmin)
-admin.site.unregister(Group)
+#admin.site.unregister(Group)
 
 #admin.site.unregister(User)
 #admin.site.register(User, UserAdmin)

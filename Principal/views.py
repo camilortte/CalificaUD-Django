@@ -3,12 +3,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.shortcuts import render, redirect ,render_to_response
-from Principal.forms import LoginForm,RegisterFormForm
+from Principal.forms import LoginForm , ActualizarUserForm
 from django.template import RequestContext
 from django.views.decorators.cache import cache_control
-from Principal.models import Docente , Materia
+from Principal.models import Docente , Materia , Estudiante
 #from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from Principal.admin import UserCreationForm
+from Principal.admin import UserCreationForm 
 
 
 
@@ -25,7 +25,7 @@ def login(request):
     auth.logout(request)
     if request.method == 'POST': 
         formulario = LoginForm(request.POST) 
-        formularioRegistro = RegisterFormForm() 
+        formularioRegistro = UserCreationForm() 
         if formulario.is_valid(): 
             username=formulario.cleaned_data['username']
             password=formulario.cleaned_data['password']
@@ -34,60 +34,64 @@ def login(request):
                 auth.login(request, user)
                 return redirect('index_private',permanent=True)   
             else:         
-                return render(request, 'register/login.html', 
+                return render(request, 'register/login-register.html', 
                     {'formulario': formulario,'errorValidation':'Usuario o password Incorrectos','formularioRegistro': formularioRegistro,})
     else:
         formulario = LoginForm() 
-        formularioRegistro = RegisterFormForm() 
-    return render(request, 'register/login.html', {'formulario': formulario,'formularioRegistro': formularioRegistro})
+        formularioRegistro = UserCreationForm() 
+    return render(request, 'register/login-register.html', {'formulario': formulario,'formularioRegistro': formularioRegistro})
 
 def logout(request):
     auth.logout(request)
     return redirect('home',permanent=True)
 
-def registration(request):
-    auth.logout(request)
-    if request.method == 'POST': 
-        formulario = LoginForm() 
-        formularioRegistro = RegisterFormForm(request.POST) 
-        if formularioRegistro.is_valid():     
-            #userName = request.cleaned_data['username', None]
-            #userPass = request.cleaned_data['password', None]
-            #userMail = request.cleaned_data['email', None]
-            #return render(request, 'login.html')
-            return redirect('index_general')
-    else:
-        formulario = LoginForm() 
-        formularioRegistro = RegisterFormForm() # An unbound form
-    return render(request, 'register/login.html', {'formularioRegistro': formularioRegistro,'formulario': formulario,'registro':True})
 
 @login_required(login_url='index_general')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def todos_los_profesores(request):
-    docentes = Docente.objects.all()
+    """docentes = Docente.objects.all()
     materias_docente=[]
     for docente in docentes:        
         materias_docente.append(Materia.objects.filter(profesor=docente))
-    materias_docente=Materia.objects.filter(profesor__id=2)
-    return render(request,'autenticado/todos_profesores.html',{'materias_docente':materias_docente})
+
+    return render(request,'autenticado/todos_profesores.html',{'materias_docente':materias_docente})"""
+    docentes = Docente.objects.all()
+    return render(request,'autenticado/todos_profesores.html',{'docentes':docentes})
    
 
-def registration2(request):
+def registration(request):
     auth.logout(request)
     if request.method == 'POST': 
         formulario = LoginForm() 
         formularioRegistro =UserCreationForm(request.POST) 
         if formularioRegistro.is_valid():     
             formularioRegistro.save()
-            #userName = request.cleaned_data['username', None]
-            #userPass = request.cleaned_data['password', None]
-            #userMail = request.cleaned_data['email', None]
-            #return render(request, 'login.html')
             return redirect('index_general')
     else:
         formulario = LoginForm() 
         formularioRegistro = UserCreationForm(request.POST)  # An unbound form
-    return render(request, 'register/login-register.html', {'formularioRegistro': formularioRegistro,'formulario': formulario,'registro':True})
+    return render(request, 'register/login-register.html', 
+        {'formularioRegistro': formularioRegistro,'formulario': formulario,'registro':True})
 
    
+@login_required(login_url='index_general')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def actualizar(request):
+    if request.method == 'POST':    
+        formulario = ActualizarUserForm(request.POST,instance=request.user)             
+        if formulario.is_valid():      
+            try:                  
+                formulario.clean_password()
+                password=formulario.cleaned_data['password1']        
+                formulario.save()
+                user = Estudiante.objects.get(email__exact=request.user)
+                user.set_password(password)
+                user.save()
+                return render(request, 'register/actualizar.html', {'formulario': formulario,'ok':'Sus datos se almacenaron satisfactoriamente.'})
+            except Exception:               
+                return render(request, 'register/actualizar.html', 
+                {'formulario': formulario,'user':request.user,'error':'Password no coincide.'})
+    else:
+        formulario = ActualizarUserForm(instance=request.user)     
+    return render(request, 'register/actualizar.html', {'formulario': formulario,'user':request.user})
 

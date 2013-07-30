@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator , MinValueValidator
 import datetime 
 from django.contrib.auth.models import AbstractBaseUser,  BaseUserManager ,PermissionsMixin
+from django.utils import timezone
 #from django.contrib.auth.models import User
 
 
@@ -77,19 +78,6 @@ class Carrera(models.Model):
     def __unicode__(self):
         return self.nombre
 
-
-class Docente(models.Model):
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
-    informacion = models.URLField(help_text='Url que contiene informacion sobre el profesor',null=True,blank=True)
-
-    class Meta:
-        verbose_name = u'Docente'
-        verbose_name_plural = u'Docentes'
-
-    def __unicode__(self):
-        return self.nombre
-
 class Horario(models.Model):
     lunes = models.CharField(max_length=15,null=True,blank=True)
     martes = models.CharField(max_length=15,null=True,blank=True)
@@ -115,13 +103,13 @@ class Horario(models.Model):
         return "Horario"
    
 
+
 class Materia(models.Model):
     nombre = models.CharField(max_length=100)
     numero_creditos = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(10)])
     intensidad_horaria_semanal = models.IntegerField(validators = [MinValueValidator(1), MaxValueValidator(25)])
     temario = models.FileField(upload_to='temario_carrera/',null=True,blank=True)
-    horario = models.ForeignKey(Horario,null=True,blank=True)
-    profesor = models.ManyToManyField(Docente)
+    horario = models.ForeignKey(Horario,null=True,blank=True)    
     carrera = models.ForeignKey(Carrera)
 
     class Meta:
@@ -130,6 +118,22 @@ class Materia(models.Model):
 
     def __unicode__(self):
         return self.nombre
+
+class Docente(models.Model):
+    nombre = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
+    informacion = models.URLField(help_text='Url que contiene informacion sobre el profesor',null=True,blank=True)
+    materia = models.ManyToManyField(Materia)
+    carrera = models.ManyToManyField(Carrera)
+    class Meta:
+        verbose_name = u'Docente'
+        verbose_name_plural = u'Docentes'
+
+    def __unicode__(self):
+        return self.nombre
+
+
+
 
 class Criterio(models.Model):
     descripcion = models.TextField(help_text='Pregunta bien redactada')
@@ -178,43 +182,33 @@ class MyUserManager(BaseUserManager):
             apellido=apellido,
             codigo=codigo,
         )
-        user.is_admin = True
+        user.is_staff = True
+        user.is_active = True
+        user.is_superuser = True
         user.set_password(password)
         user.save(using=self._db)
         return user
-
-"""class Estudiante(models.Model):
-    #user  = models.OneToOneField(User)
-    nombre = models.CharField(max_length=250)
-    apellido = models.CharField(max_length=250)
-    email = models.EmailField(unique=True) 
-    codigo = models.CharField(max_length=11,null=False,blank=False)    
-    carrera = models.ForeignKey(Carrera)
-    localidad = models.ForeignKey(Localidad)
-
-    class Meta:
-        verbose_name = u'Estudiante'
-        verbose_name_plural = u'Estudiantes'
-
-    def __unicode__(self):  
-        return self.nombre+" "+self.codigo"""
 
 class Estudiante(AbstractBaseUser,PermissionsMixin):
     nombre = models.CharField(max_length=250,null=False,blank=False)
     apellido = models.CharField(max_length=250,null=False,blank=False)
     email = models.EmailField(
-        verbose_name='Direccion de correo Electronico',
+        verbose_name='Correo electronico',
         max_length=255,
         unique=True,
         db_index=True,
     )
-    codigo = models.CharField(max_length=11,null=False,blank=False)    
-    carrera = models.ForeignKey(Carrera,null=True,blank=True)
-    localidad = models.ForeignKey(Localidad,null=True,blank=True)    
+    codigo = models.CharField(max_length=11,null=True,blank=False)    
+    carrera = models.ForeignKey(Carrera,null=True,blank=False)
+    localidad = models.ForeignKey(Localidad,null=True,blank=False)    
     
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    
+    is_staff = models.BooleanField(u'staff status', default=False,
+        help_text=u'Designates whether the user can log into this admin '
+                    'site.')
+    is_active = models.BooleanField(u'active', default=True,
+        help_text=u'Designates whether this user should be treated as '
+                    'active. Unselect this instead of deleting accounts.')
+    date_joined = models.DateTimeField(u'date joined', default=timezone.now)
 
 
     objects = MyUserManager()
@@ -233,22 +227,10 @@ class Estudiante(AbstractBaseUser,PermissionsMixin):
     def __unicode__(self):
         return self.email
 
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        return self.is_admin
+    class Meta:
+        verbose_name = u'Estudiante'
+        verbose_name_plural = u'Estudiantes'
    
-
 
 
 

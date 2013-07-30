@@ -1,0 +1,39 @@
+{% extends 'autenticado/base.html'%}
+
+{%block titulo%}Estudiante CalificaUD{%endblock titulo%}
+
+{%block styles%}
+<link href="{{STATIC_URL}}css/styles.css" rel="stylesheet">
+{%endblock styles%}
+
+{% block home_active %}active{% endblock home_active %}   
+
+
+{% block contenido %}
+    <form action="." method="post">{%csrf_token%}
+      {% for field in formulario %}
+                {{ field.label_tag }} {{ field }}
+      {% endfor %}            
+      <p><input class='btn' type="submit" value='Guardar'/></p>             
+    </form>
+    {% if  formulario.errors or error%}
+        <div> <h5>Hay los siguiente errores: </h5></div>  
+        {% for errors in formulario.errors.items %}
+          <div class="alert alert-error">
+          {% for error in errors %}
+                {{error}}
+              {% endfor %}
+              </div>
+          {% endfor %}  
+          {% if error %}
+            <div class="alert alert-error">{{error}}</div>                    
+          {% endif %}                  
+          
+      {% endif %}
+
+    {% if ok %}
+           <div class="alert alert-success">{{ok}}</div>  
+    {% endif %}      
+
+
+{% endblock contenido %}

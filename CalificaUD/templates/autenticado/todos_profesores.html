@@ -11,20 +11,31 @@
 
 {% block contenido %}
 
-  {% if materias_docente %}      
-  {{materias_docente}}
-      <h1>Profesores</h1>
+  {% if docentes %}      
+      
+      <h1 class="text-center">Profesores</h1>
       <table class="table table-bordered">
         <tr>
           <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Materia</th>
+          <th>Carrera</th>
+          <th>Materias</th>
         </tr>
-        {% for materias in materias_docente%}             
+
+        {% for docente in  docentes%}
           <tr>
-            {{materias}}
-          </tr> 
-        {%endfor%}
+            <td>{{docente.nombre}} {{docente.apellido}}</td>
+            <td>
+            {% for carrera in  docente.carrera.all%}
+              {{carrera.nombre|linebreaks}}
+            {% endfor %}
+            </td>            
+            <td>
+            {% for materia in  docente.materia.all %}
+              {{materia.nombre|linebreaks}}
+            {% endfor %}
+            </td>
+          </tr>          
+        {% endfor %}
       </table>
     {% else %}
       <h1>No hay registros</h1>
@@ -33,15 +44,22 @@
 {% endblock contenido %}
 
 {% comment %}
-  {% for materia in materias_docente%}   
-          {{materia}}
-          {% for ma in  materia%}            
-            {% for docente in ma.profesor.all %}
-                <td>{{ docente.nombre }}</td> 
-                <td>{{ docente.apellido }}</td>                     
-              <td>{{ ma.nombre }}</td> 
-            {% endfor %}
-        {% endfor %}          
-        
-        {%endfor%}
+{% for materia_docente in  materias_docente%}
+          <tr>            
+            <td>{{materia_docente.0.profesor.all.0.nombre}} {{materia_docente.0.profesor.all.0.apellido}}</td> 
+            <td>{{materia_docente.0.profesor.all}}</td>
+            <td>{{materia_docente.0.carrera}}</td>            
+            <td>
+              <table class="table table-bordered">
+          {% for materia in  materia_docente%}
+              <tr>
+                <td>{{materia.nombre}}</td>
+                <td>{{materia.carrera}}</td>
+              </tr>
+            
+          {% endfor %}        
+            </table>
+            </td>  
+          </tr>
+       {% endfor %}
 {% endcomment %}
