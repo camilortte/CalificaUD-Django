@@ -1,0 +1,40 @@
+{% extends 'autenticado/base.html'%}
+
+{%block titulo%}Estudiante CalificaUD{%endblock titulo%}
+
+{%block styles%}
+<link href="{{STATIC_URL}}css/styles.css" rel="stylesheet">
+{%endblock styles%}
+
+{% block calificar %}active{% endblock calificar %}   
+
+
+{% block contenido %}
+  <p>Buscar profesor por nombre <input type="text" name='busqueda_nombre'/></p>
+  <p>Filtrar: 
+  	<p>
+  		<h2>Facultad</h2>
+      <form action="" method='post'>{%csrf_token%}
+        {% for field in formulario %}
+            {{ field.label_tag }} {{ field }}
+        {% endfor %}
+        <input type="submit" value="enviar"/>
+      </form>
+      {% if  formulario.errors%}
+        <div> <h5>Hay los siguiente errores: </h5></div>  
+        {% for errors in formulario.errors.items %}
+          <div class="alert alert-error">
+          {% for error in errors %}
+                {{error}}
+              {% endfor %}
+              </div>
+          {% endfor %}          
+      {% endif %}
+
+  	
+  	</p>
+
+   </p>
+
+{% endblock contenido %}
+

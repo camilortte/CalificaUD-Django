@@ -3,12 +3,11 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.shortcuts import render, redirect ,render_to_response
-from Principal.forms import LoginForm , ActualizarUserForm
+from Principal.forms import LoginForm , ActualizarUserForm ,ChangePasswordForm ,UserCreationForm , SeleccionFacultadesForm
 from django.template import RequestContext
 from django.views.decorators.cache import cache_control
-from Principal.models import Docente , Materia , Estudiante
+from Principal.models import Docente ,  Estudiante , Materia, Facultad , Carrera
 #from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from Principal.admin import UserCreationForm 
 
 
 
@@ -80,13 +79,8 @@ def actualizar(request):
     if request.method == 'POST':    
         formulario = ActualizarUserForm(request.POST,instance=request.user)             
         if formulario.is_valid():      
-            try:                  
-                formulario.clean_password()
-                password=formulario.cleaned_data['password1']        
+            try:                        
                 formulario.save()
-                user = Estudiante.objects.get(email__exact=request.user)
-                user.set_password(password)
-                user.save()
                 return render(request, 'register/actualizar.html', {'formulario': formulario,'ok':'Sus datos se almacenaron satisfactoriamente.'})
             except Exception:               
                 return render(request, 'register/actualizar.html', 
@@ -94,4 +88,72 @@ def actualizar(request):
     else:
         formulario = ActualizarUserForm(instance=request.user)     
     return render(request, 'register/actualizar.html', {'formulario': formulario,'user':request.user})
+
+@login_required(login_url='index_general')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def change_password(request):
+    if request.method=='POST':
+        formulario= ChangePasswordForm(request.POST)
+        if formulario.is_valid():
+            try:
+                password=formulario.cleaned_data['pasword_anterior']
+                user = auth.authenticate(username=request.user, password=password)
+                if user == None:
+                    return render(request, 'register/change_password.html', 
+                    {'formulario': formulario,'user':request.user,'error':'Password anterior no coincide.'})   
+                else:
+                    user = Estudiante.objects.get(email__exact=request.user)
+                    password=formulario.cleaned_data['password1']
+                    user.set_password(password)
+                    user.save()
+                    print "SE CAMBIO EL PASSWORD"
+                    return render(request, 'register/change_password.html', 
+                        {'formulario': formulario,'ok':'se cabmio la contraseña correctamente'})
+            except Exception,e:
+                return render(request, 'register/change_password.html', 
+                    {'formulario': formulario,'user':request.user,'error':str(e)})
+    else:
+        formulario= ChangePasswordForm()
+    return render(request, 'register/change_password.html', {'formulario':formulario})
+
+@login_required(login_url='index_general')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def calificar(request):
+    if request.method=='POST':        
+        formulario=SeleccionFacultadesForm(request.POST)        
+        if formulario.is_valid():
+            facultad=formulario.cleaned_data['facultades']
+            if facultad!=None:
+                formulario.fields['carreras'].queryset=Carrera.objects.filter(facultad=Facultad.objects.filter(nombre=facultad))                
+                carreras=formulario.cleaned_data['carreras']                
+                if carreras != None:
+                    formulario.fields['materias'].queryset=Materia.objects.filter(carrera=carreras)   
+                    materia=formulario.cleaned_data['materias']
+                    if materia!= None:
+                        formulario.fields['docentes'].queryset=Docente.objects.filter(materia=Materia.objects.filter(nombre=materia))   
+                    else:
+                        del formulario.fields['docentes']    
+                else:                    
+                    del formulario.fields['materias']
+                    del formulario.fields['docentes']
+            else:
+                del formulario.fields['carreras']
+                del formulario.fields['materias']
+                del formulario.fields['docentes']
+
+
+        else:     
+            del formulario.fields['carreras']
+            del formulario.fields['materias']
+            del formulario.fields['docentes']       
+            return render(request,'autenticado/calificar.html',{'formulario':formulario})
+    else:
+        formulario=SeleccionFacultadesForm()
+        del formulario.fields['carreras']
+        del formulario.fields['materias']
+        del formulario.fields['docentes']
+
+    return render(request,'autenticado/calificar.html',{'formulario':formulario})
+            
+
 

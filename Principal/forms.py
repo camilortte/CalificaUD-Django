@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms 
-from Principal.models import Estudiante
+from Principal.models import Estudiante, Facultad , Carrera , Materia , Docente
+
 
 
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
@@ -78,7 +79,6 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
 
-
 class UserChangeForm(forms.ModelForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's
@@ -94,16 +94,34 @@ class UserChangeForm(forms.ModelForm):
     def clean_password(self):
         return self.initial["password"]
 
+
 class ActualizarUserForm(forms.ModelForm):
-    password1 = forms.CharField(label=u'Contraseña', widget=forms.PasswordInput,required=True)
-    password2 = forms.CharField(label='Confirme Password', widget=forms.PasswordInput,required=True)
     class Meta:
         model = Estudiante
         exclude =['password','groups','user_permissions','last_login','is_superuser','is_staff','is_active','date_joined']
+
+    
+
+class ChangePasswordForm(forms.Form):
+    pasword_anterior = forms.CharField(label=u'Contraseña Antigua', widget=forms.PasswordInput,required=True)
+    password1 = forms.CharField(label=u'Contraseña', widget=forms.PasswordInput,required=True)
+    password2 = forms.CharField(label='Confirme nueva Contraseña', widget=forms.PasswordInput,required=True)    
 
     def clean_password(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("El password no coincide")
+            raise forms.ValidationError("El password  nuevo no coincide") 
         return password2
+
+class SeleccionFacultadesForm(forms.Form):
+    facultades = forms.ModelChoiceField(queryset=Facultad.objects.all(),empty_label="seleccione facultad",widget=forms.Select(attrs={'onchange': 'this.form.submit();'}),required=False)
+    carreras =   forms.ModelChoiceField(queryset=Carrera.objects.all(),empty_label="seleccione la carrera",required=False,widget=forms.Select(attrs={'onchange': 'this.form.submit();'}))
+    materias =   forms.ModelChoiceField(queryset=Materia.objects.all(),empty_label="seleccione la materia",required=False,widget=forms.Select(attrs={'onchange': 'this.form.submit();'}))
+    docentes =   forms.ModelChoiceField(queryset=Docente.objects.all(),empty_label="seleccione el docente",required=False,widget=forms.Select(attrs={'onchange': 'this.form.submit();'}))
+    
+        
+
+
+class SeleccionCarrerasForm(forms.Form):
+    carrera = forms.ModelChoiceField(queryset=Carrera.objects.all())

@@ -24,10 +24,10 @@
             <li><a href="#about">Acerca de</a></li>
           </ul>
                   <div class="btn-group navbar-text pull-right">
-              <a class="btn" href=""><i class="icon-user"></i> {{user.nombre|title|truncatechars:15}} {{user.apellido|title|truncatechars:15}}</a>
+              <a class="btn" href="#" data-toggle="dropdown"><i class="icon-user"></i> {{user.nombre|title|truncatechars:15}} {{user.apellido|title|truncatechars:15}}</a>
               <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="{% url 'actualizar'%}"><i class="icon-pencil"></i> Actualizar Datos</a></li>                
+                <li><a href="{% url 'actualizar'%}"><i class="icon-pencil"></i> Actualizar Datos personales</a></li>                
                 <li class="divider"></li>
                 <li><a href="{% url 'logout'%}"><i class="icon-off"></i> Cerrar sesi&oacute;n</a></li>
               </ul>
@@ -52,8 +52,7 @@
               <li><a class="btn space_link  {% block estadisticas_carrera_active %}{% endblock  %}" href="estadisticas_carrera.html">Estadisticas por carrera <span class="label label-important">¡Nuevo!</span></a></li>
               <li><a class="btn space_link  {% block estadisticas_materia_active %}{% endblock  %}" href="estadisticas_materia.html">Estadisticas por Materia <span class="label label-important">¡Nuevo!</span></a></li>
               <li class="nav-header  {% block calificar_active %}{% endblock  %}"><i class="icon-ok-sign"></i> Califica</li>
-              <li><a class="btn  space_link  {% block calificar_carrera_active %}{% endblock  %}" href="califica_carrera.html">Por carrera <span class="label label-important">¡Nuevo!</span></a></li>
-              <li><a class="btn space_link  {% block calificar_materia_active %}{% endblock  %}" href="califica_materia.html">Por materia <span class="label label-important">¡Nuevo!</span></a></li>
+              <li><a class="btn  space_link  {% block calificar %}{% endblock  %}" href="{%url 'calificar'%}">Calificar </a></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

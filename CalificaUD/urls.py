@@ -18,5 +18,7 @@ urlpatterns = patterns('',
     #url(r'^registro/$', 'Principal.views.registration',name='registro'),   
     url(r'^profesores/', 'Principal.views.todos_los_profesores',name='todos_profesores'),   
     url(r'^registro/$', 'Principal.views.registration',name='registro'),   
-    url(r'^actualizar/','Principal.views.actualizar',name='actualizar')
+    url(r'^actualizar/','Principal.views.actualizar',name='actualizar'),
+    url(r'^cambiopassword/','Principal.views.change_password',name='change_password'),
+    url(r'^calificar/','Principal.views.calificar',name='calificar'),
 )

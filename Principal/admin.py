@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Principal.models import Horario,Docente,Carrera,Materia,Facultad,Localidad,Estudiante
+from Principal.models import Horario,Docente,Carrera,Materia,Facultad,Localidad,Estudiante,Criterio,Calificacion,Comentario
 from django.contrib.auth.admin import UserAdmin
 #from django.contrib.auth.models import User
 
@@ -35,7 +35,8 @@ class MyUserAdmin(UserAdmin):
 
 admin.site.register(Estudiante, MyUserAdmin)
 #admin.site.unregister(Group)
-
+admin.site.register(Criterio)
+admin.site.register(Comentario)
 #admin.site.unregister(User)
 #admin.site.register(User, UserAdmin)
 admin.site.register(Localidad)
